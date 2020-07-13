@@ -1,26 +1,42 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import CommandLine from "./components/CommandLine";
+import ResponseBlock from "./components/ResponseBlock";
+import {setRates} from "./store/actionTypes";
+import {connect} from "react-redux";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+    constructor(props) {
+        super(props);
+        fetch('http://data.fixer.io/api/latest?access_key=2cef6f6f3911a9b6000f950dd4126f02')
+            .then(res => {
+                return res.json();
+            })
+            .then(res => {
+                this.props.setRates(res.rates);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+    render() {
+        return (
+            <div className="container">
+                <CommandLine/>
+                <ResponseBlock/>
+            </div>
+        );
+    }
 }
 
-export default App;
+function mapDispatchToProps(dispatch) {
+    return {
+        setRates: (rates) => {
+            dispatch(setRates(rates))
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(App)
