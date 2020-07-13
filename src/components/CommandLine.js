@@ -35,6 +35,7 @@ class CommandLine extends React.Component {
         this.setState({
             value: "",
         });
+
     }
 
     handleKeyPress(e) {
